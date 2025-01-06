@@ -28,6 +28,7 @@ public class Taxi : MonoBehaviour
     void Update()
     {
         taxiSpeed = taxiRB.velocity.magnitude;
+        inputHandler.CheckSpacePressed();
         moveInput = inputHandler.GetMoveInput();
         turnInput = inputHandler.GetTurnInput();
         CheckSpeed();
