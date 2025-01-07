@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Taxi : MonoBehaviour
@@ -13,6 +16,9 @@ public class Taxi : MonoBehaviour
     private float taxiSpeed;
     private float moveInput;
     private float turnInput;
+
+    public bool isCarryingClient;
+    public event Action<Client> droppedClientAtDestination; // ISA: TODO completar donde se lanza este evento
 
 
     // Start is called before the first frame update
