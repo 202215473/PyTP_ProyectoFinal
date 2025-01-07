@@ -13,13 +13,12 @@ internal class MainSceneManager : MySceneManager
     [SerializeField]  private InputHandler inputHandler;
     [SerializeField] private LifeManager lifeManager;
     public GameObject pauseMenu;
-    public GameObject cityMap;
     public GameObject gameOverMessage;
+    public event Action resumeGame;
 
     void Start()
     {
         pauseMenu.SetActive(false);
-        cityMap.SetActive(true);
         gameOverMessage.SetActive(false);
     }
 
@@ -37,23 +36,25 @@ internal class MainSceneManager : MySceneManager
 
     private void HandleSpacePress()
     {
-        // TODO: parar el juego
         pauseMenu.SetActive(true);
-        cityMap.SetActive(false);
     }
 
     private void EndGame()
     {
         gameOverMessage.SetActive(true);
-        Thread.Sleep(3000);
+        StartCoroutine(Sleep(3));
         QuitGame();
+    }
+
+    public IEnumerator  Sleep(int seconds2Sleep)
+    {
+        yield return new WaitForSeconds(seconds2Sleep);
     }
 
     public void ResumeGame()
     {
-        // TODO: permitir al juego continuar
         pauseMenu.SetActive(false);
-        cityMap.SetActive(true);
+        resumeGame.Invoke();
     }
 
     public void QuitGame()
