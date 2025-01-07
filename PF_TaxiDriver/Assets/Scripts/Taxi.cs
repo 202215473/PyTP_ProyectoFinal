@@ -26,7 +26,7 @@ public class Taxi : MonoBehaviour
     {
         taxiRB = gameObject.AddComponent<Rigidbody>();
         inputHandler = gameObject.AddComponent<InputHandler>();
-}
+    }
 
     // Update is called once per frame
     void Update()
