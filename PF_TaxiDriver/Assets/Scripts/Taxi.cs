@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Taxi : MonoBehaviour
 {
     public float turnAngle;
     public float acceleration;
+    public WheelColliders colliders;
+    public WheelMeshes meshes;
+    public AnimationCurve curve;
 
     private Rigidbody taxiRB;
-    private WheelColliders colliders;
-    private WheelMeshes meshes;
     private InputHandler inputHandler;
-    private float taxiSpeed = 0f;
+    private float taxiSpeed;
     private float moveInput;
     private float turnInput;
 
@@ -20,13 +18,21 @@ public class Taxi : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        taxiRB = gameObject.AddComponent<Rigidbody>();
+        taxiRB = gameObject.GetComponent<Rigidbody>();
         inputHandler = gameObject.AddComponent<InputHandler>();
-}
+    }
 
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
+        taxiSpeed = this.taxiRB.velocity.magnitude;
+        moveInput = this.inputHandler.GetMoveInput();
+        turnInput = this.inputHandler.GetTurnInput();
+        this.CheckSpeed(moveInput);
+        this.CheckDirection(turnInput);  // To see if we are turning right or left
+        this.UpdateMovement();
+=======
         taxiSpeed = taxiRB.velocity.magnitude;
         inputHandler.CheckSpacePressed();
         moveInput = inputHandler.GetMoveInput();
@@ -34,64 +40,63 @@ public class Taxi : MonoBehaviour
         CheckSpeed();
         CheckDirection();  // To see if we are turning right or left
         UpdateMovement();
+>>>>>>> 1f6757ec33c25196f48b4e04cf7504fb014e76e0
     }
 
-    void CheckSpeed()
+    void CheckSpeed(float moveInput)
     {
         if (moveInput > 0)
-            { Accelerate(); }
+        { Accelerate(moveInput); }
         else if (moveInput < 0)
-            { Brake(); }
+        { Brake(moveInput); }
         else
-            { Decelerate(); }
+        { Decelerate(); }
+        
+
     }
-    void CheckDirection()
+    void CheckDirection(float turnInput)
     {
         if (turnInput != 0)
-            { Turn(); }
+        { Turn(turnInput); }
     }
     void UpdateMovement()
     {
-        UpdateGraphics(colliders.wheelFR, meshes.wheelFR);
-        UpdateGraphics(colliders.wheelFL, meshes.wheelFL);
-        UpdateGraphics(colliders.wheelRR, meshes.wheelRR);
-        UpdateGraphics(colliders.wheelRL, meshes.wheelRL);
+        UpdateGraphics(this.colliders.wheelFR, this.meshes.wheelFR);
+        UpdateGraphics(this.colliders.wheelFL, this.meshes.wheelFL);
+        UpdateGraphics(this.colliders.wheelRR, this.meshes.wheelRR);
+        UpdateGraphics(this.colliders.wheelRL, this.meshes.wheelRL);
     }
 
-    private void Brake()
+    private void Brake(float moveInput)
     {
-        this.colliders.wheelRR.brakeTorque = Mathf.Abs(acceleration * moveInput); 
-        this.colliders.wheelRR.brakeTorque = Mathf.Abs(acceleration * moveInput); 
+        this.colliders.wheelRR.brakeTorque = Mathf.Abs(this.acceleration * moveInput);
+        this.colliders.wheelRL.brakeTorque = Mathf.Abs(this.acceleration * moveInput);
     }
     private void Decelerate()
     {
-        float resistance = acceleration * 0.1f;
-        colliders.wheelRR.brakeTorque = resistance;
-        colliders.wheelRL.brakeTorque = resistance;
+        float resistance = this.acceleration * 0.1f;
+        this.colliders.wheelRR.brakeTorque = resistance;
+        this.colliders.wheelRL.brakeTorque = resistance;
     }
-    private void Accelerate()
+    private void Accelerate(float moveInput)
     {
-        this.colliders.wheelRR.motorTorque = acceleration * moveInput;
-        this.colliders.wheelRR.motorTorque = acceleration * moveInput;
+        this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
+        this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;
     }
-    private void Turn()
-    {
-        // Calcular el ángulo de dirección basado en el input del jugador
-        float angle = turnAngle * turnInput;
 
-        // Aplicar el ángulo de giro a las ruedas delanteras
-        colliders.wheelFR.steerAngle = angle;
-        colliders.wheelFL.steerAngle = angle;
+    private void Turn(float turnInput)
+    {
+        float angle = turnInput * this.curve.Evaluate(this.taxiSpeed); ;
+
+        this.colliders.wheelFR.steerAngle = angle;
+        this.colliders.wheelFL.steerAngle = angle;
     }
     void UpdateGraphics(WheelCollider wheelCollider, MeshRenderer wheelMesh)
     {
         Vector3 position;
         Quaternion rotation;
 
-        // Obtener la posición y rotación del WheelCollider
         wheelCollider.GetWorldPose(out position, out rotation);
-
-        // Aplicar la posición y rotación al modelo visual
         wheelMesh.transform.position = position;
         wheelMesh.transform.rotation = rotation;
     }
