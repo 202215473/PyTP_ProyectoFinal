@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 568985597124981416}
   - component: {fileID: 5838175529488836818}
   - component: {fileID: 3295747975015287969}
+  - component: {fileID: 634844586849765587}
   m_Layer: 0
   m_Name: casual_Male_K
   m_TagString: Untagged
@@ -161,6 +162,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1145031778eada459007489a5ecd7e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &634844586849765587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913845681951795218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4679ab59b7e0148b161cd330fc8b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &944684095800602908

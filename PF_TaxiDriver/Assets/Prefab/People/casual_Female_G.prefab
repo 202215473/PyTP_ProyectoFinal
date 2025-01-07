@@ -842,6 +842,7 @@ GameObject:
   - component: {fileID: 5776691538091650739}
   - component: {fileID: 489417422609642697}
   - component: {fileID: -4720535539113630595}
+  - component: {fileID: -6594293791345499725}
   m_Layer: 0
   m_Name: casual_Female_G
   m_TagString: Untagged
@@ -897,6 +898,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1145031778eada459007489a5ecd7e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-6594293791345499725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6584613354768528393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4679ab59b7e0148b161cd330fc8b4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6646269780412227657

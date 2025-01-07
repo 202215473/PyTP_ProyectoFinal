@@ -9,20 +9,24 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private MainSceneManager mainSceneManager;
     public ClientSpawner clientSpawner;
     public BoxCollider worldLimits;
+    public Taxi player;
 
-    bool gamePaused = false;
+    private bool gamePaused = false;
+    private int numberClientsDroppedOff = 0;
+    int contador = 0;
 
     void Update()
     {
         if (!gamePaused)
         {
             // pensar cuando deben salir los clientes (en funcion al tiempo jugado o en funcion a los clientes recogidos?)
-            if () // condicion para nuevo cliente
+            if (contador == 0) // condicion para nuevo cliente
             {
                 Vector3 positionNewClient = GenerateRandomPosition();
                 Vector3 clientsDestination = GenerateRandomPosition();  // el destino se ve cuando el taxi a recogido al cliente
 
                 clientSpawner.Spawn(positionNewClient, clientsDestination);
+                contador += 1;
                 // se cuenta como q el taxi ha recogido al cliente cuando esta a menos de una distancia de x
             }
         }
@@ -36,7 +40,7 @@ public class GameManager : Singleton<GameManager>
         {
             x = UnityEngine.Random.Range(worldBounds.min.x, worldBounds.max.x);
         }
-        float y = -16.3f;
+        float y = -30.68f;
         float z = UnityEngine.Random.Range(worldBounds.min.z, worldBounds.max.z);
         while (z < worldBounds.min.z || z > worldBounds.max.z)
         {
@@ -50,12 +54,14 @@ public class GameManager : Singleton<GameManager>
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
+        player.droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
     {
-        inputHandler.userPressedSpace -= HandleSpacePress;
+        //inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
+        // player.droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
@@ -68,5 +74,11 @@ public class GameManager : Singleton<GameManager>
     {
         // TODO: permitir al juego continuar
         gamePaused = false;
+    }
+
+    private void DeleteClient(Client client)
+    {
+        numberClientsDroppedOff++;
+        clientSpawner.DestroyClient(client);
     }
 }

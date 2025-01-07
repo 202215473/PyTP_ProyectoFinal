@@ -18,7 +18,6 @@ public class ClientSpawner : MonoBehaviour
 
     public event Action<Client> newClientSpawned;
 
-    // Start is called before the first frame update
     void Start()
     {
         prefabDictionary = new Dictionary<int, GameObject>()
@@ -31,22 +30,38 @@ public class ClientSpawner : MonoBehaviour
             {6, elderPrefab},
             {7, boyPrefab}
         };
+
+        foreach (var prefab in prefabDictionary)
+        {
+            if (prefab.Value == null)
+            {
+                Debug.LogError($"Prefab con clave {prefab.Key} no está asignado en el inspector.");
+            }
+        }
     }
 
     public void Spawn(Vector3 positionNewClient, Vector3 clientsDestination)
     {
-        int numberNewClient = UnityEngine.Random.Range(1, 7);
+        int numberNewClient = UnityEngine.Random.Range(1, 8);
         GameObject newClient2Spawn = prefabDictionary[numberNewClient];
 
-        GameObject newClient = Instantiate(newClient2Spawn, positionNewClient, Quaternion.identity);
+        GameObject newClient = Instantiate(newClient2Spawn, Vector3.zero, Quaternion.identity);
+        newClient.transform.position = positionNewClient;
         Client client = newClient.GetComponent<Client>();
+        client.SetPosition(newClient.transform.position);
         client.SetDestination(clientsDestination);
         clients.Add(client);
         newClientSpawned.Invoke(client);
     }
 
-    public void DestroyFirstClient()
+    public void DestroyClient(Client client)
     {
-        Destroy(clients[0].gameObject);
+        bool isPickedUp = client.IsPickedUp();
+        if (isPickedUp)
+        { 
+            Destroy(client.gameObject);
+            clients.Remove(client);
+        }
+        
     }
 }
