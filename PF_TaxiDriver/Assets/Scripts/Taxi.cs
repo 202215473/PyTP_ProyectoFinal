@@ -25,12 +25,22 @@ public class Taxi : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+<<<<<<< HEAD
         taxiSpeed = this.taxiRB.velocity.magnitude;
         moveInput = this.inputHandler.GetMoveInput();
         turnInput = this.inputHandler.GetTurnInput();
         this.CheckSpeed(moveInput);
         this.CheckDirection(turnInput);  // To see if we are turning right or left
         this.UpdateMovement();
+=======
+        taxiSpeed = taxiRB.velocity.magnitude;
+        inputHandler.CheckSpacePressed();
+        moveInput = inputHandler.GetMoveInput();
+        turnInput = inputHandler.GetTurnInput();
+        CheckSpeed();
+        CheckDirection();  // To see if we are turning right or left
+        UpdateMovement();
+>>>>>>> 1f6757ec33c25196f48b4e04cf7504fb014e76e0
     }
 
     void CheckSpeed(float moveInput)
