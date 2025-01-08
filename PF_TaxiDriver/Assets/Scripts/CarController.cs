@@ -7,65 +7,33 @@ public class CarController : MonoBehaviour
 {
     public float turnAngle;
     public float acceleration;
+    public float brakeForce;
     public WheelColliders colliders;
     public WheelMeshes meshes;
     public AnimationCurve curve;
 
-    private Rigidbody carRB;
-    private InputHandler inputHandler;
-    private float carSpeed;
-    private float moveInput;
-    private float turnInput;
+    protected InputHandler inputHandler;
+    protected float carSpeed = 0f;
+    protected float moveInput;
+    protected float turnInput;
 
-    public bool isCarryingClient;
-    public event Action<Client> droppedClientAtDestination; // ISA: TODO completar donde se lanza este evento
-
-
-    // Start is called before the first frame update
-    void Start()
+    protected void CheckSpeed(float moveInput)
     {
-        carRB = gameObject.GetComponent<Rigidbody>();
-        inputHandler = gameObject.AddComponent<InputHandler>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        carSpeed = this.carRB.velocity.magnitude;
-        moveInput = this.inputHandler.GetMoveInput();
-        turnInput = this.inputHandler.GetTurnInput();
-        this.CheckSpeed(moveInput);
-        this.CheckDirection(turnInput);  // To see if we are turning right or left
-        this.UpdateMovement();
-        
-        Ray ray = new Ray(transform.position, Vector3.down);
-        if (Physics.Raycast(ray, out RaycastHit hit, 10f, ~LayerMask.GetMask("CarBody")))
-        {
-            Debug.Log("Terreno detectado: " + hit.collider.name);
-        }
-        else
-        {
-            Debug.Log("Terreno no detectado. El taxi está flotando.");
-        }
-    }
-
-    void CheckSpeed(float moveInput)
-    {
-        if (moveInput > 0)
+        if (carSpeed < 0)
+        { Accelerate(moveInput); }
+        else if (moveInput > 0)
         { Accelerate(moveInput); }
         else if (moveInput < 0)
         { Brake(moveInput); }
         else
         { Decelerate(); }
-        
-
     }
-    void CheckDirection(float turnInput)
+    protected void CheckDirection(float turnInput)
     {
         if (turnInput != 0)
         { Turn(turnInput); }
     }
-    void UpdateMovement()
+    protected void UpdateMovement()
     {
         UpdateGraphics(this.colliders.wheelFR, this.meshes.wheelFR);
         UpdateGraphics(this.colliders.wheelFL, this.meshes.wheelFL);
@@ -75,24 +43,26 @@ public class CarController : MonoBehaviour
 
     private void Brake(float moveInput)
     {
-        this.colliders.wheelRR.brakeTorque = Mathf.Abs(this.acceleration * moveInput);
-        this.colliders.wheelRL.brakeTorque = Mathf.Abs(this.acceleration * moveInput);
+        this.colliders.wheelRR.brakeTorque = Mathf.Abs(this.brakeForce * moveInput);
+        this.colliders.wheelRL.brakeTorque = Mathf.Abs(this.brakeForce * moveInput);
     }
     private void Decelerate()
     {
-        float resistance = this.acceleration * 0.1f;
+        float resistance = this.acceleration * 0.2f;
         this.colliders.wheelRR.brakeTorque = resistance;
         this.colliders.wheelRL.brakeTorque = resistance;
     }
     private void Accelerate(float moveInput)
     {
+        this.colliders.wheelRR.brakeTorque = 0f;
+        this.colliders.wheelRL.brakeTorque = 0f;
+        
         this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
         this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;
     }
-
     private void Turn(float turnInput)
     {
-        float angle = turnInput * this.curve.Evaluate(this.carSpeed); ;
+        float angle = turnInput * this.turnAngle;  //this.curve.Evaluate(this.carSpeed);
 
         this.colliders.wheelFR.steerAngle = angle;
         this.colliders.wheelFL.steerAngle = angle;
