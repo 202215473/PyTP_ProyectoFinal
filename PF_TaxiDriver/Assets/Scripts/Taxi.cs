@@ -29,27 +29,10 @@ public class Taxi: CarController
         carSpeed = this.taxiRB.velocity.magnitude;
         moveInput = this.inputHandler.GetMoveInput();
         turnInput = this.inputHandler.GetTurnInput();
-        Debug.Log("MOVE INPUT = " + moveInput);
         this.CheckSpeed(moveInput);
         this.CheckDirection(turnInput);  // To see if we are turning right or left
         this.UpdateMovement();
     }
-    public void CrashWithObstacle(Obstacle obstacle)
-    {
-        int lastLifeValue = this.lifeValue;
-        this.lifeValue += obstacle.GetPointsToSubstract();
-        //float lastCarSpeed = this.carSpeed;
-        //this.carSpeed = lastCarSpeed * obstacle.GetSpeedMultiplier();
-
-        Thread.Sleep(obstacle.GetDuration());
-
-        this.SetLifeValue(lastLifeValue);
-        //this.SetSpeedValue(this.lastSpeedValue);
-    }
-    public int GetLifeValue()
-    { return lifeValue; }
-    public void SetLifeValue(int value)
-    { this.lifeValue = value; }
     public float GetSpeedValue()
     { return this.carSpeed; }
 }

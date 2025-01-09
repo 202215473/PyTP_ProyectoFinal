@@ -11,22 +11,29 @@ public class LifeManager : DataManager
     public int currentLife;
     public LifeBar lifeBar;
     public event Action gameOver;
+
+    private StateManager stateManager;
     // private ;  Clase a la que me tengo que suscribir
 
     public override void Start()
     {
         currentLife = maxLife;
         lifeBar.SetMaxLife(maxLife);
+        //stateManager = StateManager();    // INSTANCIAR STATE MANAGER
     }
 
     private void OnEnable()
     {
         // <objeto_al_q_me_subscribo>.<evento> += UpdateLife;
+        stateManager.CollisionWithObstacle += HandleCollisionWithObstacle;
+        stateManager.CollisionWithWorldLimits += HandleCollisionWithWorldLimits;
     }
 
     private void OnDisable()
     {
         // <objeto_al_q_me_subscribo>.<evento> -= UpdateLife;
+        stateManager.CollisionWithObstacle -= HandleCollisionWithObstacle;
+        stateManager.CollisionWithWorldLimits -= HandleCollisionWithWorldLimits;
     }
 
     public void UpdateLife(int damage)
@@ -40,5 +47,18 @@ public class LifeManager : DataManager
         {
             gameOver.Invoke();
         }
+    }
+    public void HandleCollisionWithObstacle(GameObject @object)
+    {
+        Obstacle obstacle = @object.GetComponent<Obstacle>();
+        if (obstacle != null)
+        {
+            int pointsToSubstract = obstacle.GetPointsToSubstract();
+            UpdateLife(Mathf.Abs(pointsToSubstract));
+        }
+    }
+    public void HandleCollisionWithWorldLimits() 
+    {
+        UpdateLife(10);
     }
 }

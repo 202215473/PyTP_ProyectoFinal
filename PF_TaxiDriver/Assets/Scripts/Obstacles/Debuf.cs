@@ -9,9 +9,8 @@ public class Debuf : Obstacle
     {
         this.canChaseTaxi = false;
         this.isSolidObject = false;
-        this.pointsToSubstract = 0;
-        //this.speedMultiplier = 0.5f;
-        this.duration = 30;
+        this.pointsToSubstract = -2;
+        this.moneyToSubstract = 0f;
     }
 
     // Update is called once per frame
