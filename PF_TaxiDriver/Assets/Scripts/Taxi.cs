@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Taxi: CarController
 {
+    [SerializeField] private InputHandler inputHandler; 
     private Rigidbody taxiRB;
 
     //public StateManager stateManager;
@@ -19,7 +20,8 @@ public class Taxi: CarController
     void Start()
     {
         taxiRB = gameObject.GetComponent<Rigidbody>();
-        inputHandler = gameObject.AddComponent<InputHandler>();
+        // InputHandler inputHandler = gameObject.AddComponent<InputHandler>(); ISA: he comentado esto y 
+        // lo he puesto como atributo para que funcionen bien los managers
     }
     // Update is called once per frame
     void Update()

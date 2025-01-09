@@ -10,15 +10,17 @@ using UnityEngine.UI;
 
 internal class MainSceneManager : MySceneManager
 {
-    [SerializeField]  private InputHandler inputHandler;
+    [SerializeField] private InputHandler inputHandler;
     [SerializeField] private LifeManager lifeManager;
-    public GameObject pauseMenu;
-    public GameObject gameOverMessage;
+    [SerializeField] private GameObject resumeBotton;
+    [SerializeField] private GameObject quitBotton;
+    [SerializeField] private GameObject gameOverMessage;
     public event Action resumeGame;
 
     void Start()
     {
-        pauseMenu.SetActive(false);
+        resumeBotton.SetActive(false);
+        quitBotton.SetActive(false);
         gameOverMessage.SetActive(false);
     }
 
@@ -36,30 +38,34 @@ internal class MainSceneManager : MySceneManager
 
     private void HandleSpacePress()
     {
-        pauseMenu.SetActive(true);
+        resumeBotton.SetActive(true);
+        quitBotton.SetActive(true);
     }
 
     private void EndGame()
     {
         gameOverMessage.SetActive(true);
-        StartCoroutine(Sleep(3));
-        QuitGame();
+        StartCoroutine(HandleGameOverSequence(5f));
     }
 
-    public IEnumerator  Sleep(int seconds2Sleep)
+    public IEnumerator HandleGameOverSequence(float seconds2Sleep)
     {
         yield return new WaitForSeconds(seconds2Sleep);
+        string newScene = "InitialScene";
+        ChangeScenes(newScene);
     }
 
     public void ResumeGame()
     {
-        pauseMenu.SetActive(false);
+        resumeBotton.SetActive(false);
+        quitBotton.SetActive(false);
         resumeGame.Invoke();
     }
 
     public void QuitGame()
     {
-        string newScene = "InitialScene";
-        ChangeScenes(newScene);
+        resumeBotton.SetActive(false);
+        quitBotton.SetActive(false);
+        EndGame();
     }
 }

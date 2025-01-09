@@ -13,7 +13,6 @@ public class CarController : MonoBehaviour
     public WheelMeshes meshes;
     public AnimationCurve curve;
 
-    protected InputHandler inputHandler;
     protected float carSpeed = 0f;
     protected float moveInput;
     protected float turnInput;

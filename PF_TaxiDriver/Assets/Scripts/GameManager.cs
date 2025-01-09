@@ -5,15 +5,21 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private InputHandler inputHandler;
+    //[SerializeField]
+    private InputHandler inputHandler;
     [SerializeField] private MainSceneManager mainSceneManager;
     public ClientSpawner clientSpawner;
-    public BoxCollider worldLimits;
+    public GameObject worldLimits;
     public Taxi player;
 
     private bool gamePaused = false;
     private int numberClientsDroppedOff = 0;
     int contador = 0;
+
+    private void Awake()
+    {
+        inputHandler = player.GetComponent<InputHandler>();
+    }
 
     void Update()
     {
@@ -34,17 +40,27 @@ public class GameManager : Singleton<GameManager>
 
     public Vector3 GenerateRandomPosition()
     {
-        Bounds worldBounds = worldLimits.bounds;
-        float x = UnityEngine.Random.Range(worldBounds.min.x, worldBounds.max.x);
-        while (x < worldBounds.min.x || x > worldBounds.max.x)
+        Transform edge1 = worldLimits.transform.GetChild(0).transform;
+        Transform edge2 = worldLimits.transform.GetChild(1);
+        Transform edge3 = worldLimits.transform.GetChild(2);
+        Transform edge4 = worldLimits.transform.GetChild(3);
+
+        float xMax = edge1.position.x;
+        float xMin = edge4.position.x;
+
+        float zMax = edge3.position.z;
+        float zMin = edge2.position.z;
+
+        float x = UnityEngine.Random.Range(xMin, xMax);
+        while (x < xMin || x > xMax)
         {
-            x = UnityEngine.Random.Range(worldBounds.min.x, worldBounds.max.x);
+            x = UnityEngine.Random.Range(xMin, xMax);
         }
         float y = -30.68f;
-        float z = UnityEngine.Random.Range(worldBounds.min.z, worldBounds.max.z);
-        while (z < worldBounds.min.z || z > worldBounds.max.z)
+        float z = UnityEngine.Random.Range(zMin, zMax);
+        while (z < zMin || z > zMax)
         {
-            z = UnityEngine.Random.Range(worldBounds.min.z, worldBounds.max.z);
+            x = UnityEngine.Random.Range(xMin, xMax);
         }
         Vector3 randomPosition = new Vector3(x, y, x);
         return randomPosition;

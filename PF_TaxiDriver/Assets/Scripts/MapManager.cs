@@ -6,10 +6,11 @@ using UnityEngine;
 
 public class MapManager : Singleton<MapManager>
 {
-    [SerializeField] private InputHandler inputHandler;
+    //[SerializeField]
+    private InputHandler inputHandler;
     [SerializeField] private MainSceneManager mainSceneManager;
     [SerializeField] private ClientSpawner clientSpawner;
-    public BoxCollider worldLimits;
+    public GameObject worldLimits;
     public Taxi player;
     public GameObject cityMap;
     public GameObject playersLocationOnMap;
@@ -19,6 +20,10 @@ public class MapManager : Singleton<MapManager>
     private List<Client> clients = new List<Client>();
     private Dictionary<Client, List<GameObject>> clientMapDictionary;
 
+    private void Awake()
+    {
+        inputHandler = player.GetComponent<InputHandler>();
+    }
 
     void Start()
     {
@@ -62,11 +67,19 @@ public class MapManager : Singleton<MapManager>
         RectTransform cityMapRect = cityMap.GetComponent<RectTransform>();
         Vector2 mapSize = cityMapRect.sizeDelta;
 
+        Transform edge1 = worldLimits.transform.GetChild(0).transform;
+        Transform edge2 = worldLimits.transform.GetChild(1);
+        Transform edge3 = worldLimits.transform.GetChild(2);
+        Transform edge4 = worldLimits.transform.GetChild(3);
 
-        Bounds worldBounds = worldLimits.bounds;
+        float xMax = edge1.position.x;
+        float xMin = edge4.position.x;
 
-        float x = (coordinates2Change.x * mapSize.x) / (worldBounds.max.x - worldBounds.min.x);
-        float y = (coordinates2Change.z * mapSize.y) / (worldBounds.max.z - worldBounds.min.z);
+        float zMax = edge3.position.z;
+        float zMin = edge2.position.z;
+
+        float x = (coordinates2Change.x * mapSize.x) / (xMax - xMin);
+        float y = (coordinates2Change.z * mapSize.y) / (zMax - zMin);
 
         return new Vector2(x, y);
     }
