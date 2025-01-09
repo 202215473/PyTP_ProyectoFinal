@@ -16,7 +16,7 @@ public class InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckSpacePressed();
     }
     public float GetMoveInput()
         { return Input.GetAxis("Vertical"); }
