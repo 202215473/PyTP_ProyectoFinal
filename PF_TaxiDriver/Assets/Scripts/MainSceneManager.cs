@@ -16,6 +16,7 @@ internal class MainSceneManager : MySceneManager
     [SerializeField] private GameObject quitBotton;
     [SerializeField] private GameObject gameOverMessage;
     public event Action resumeGame;
+    private bool gamePaused = false;
 
     void Start()
     {
@@ -38,14 +39,18 @@ internal class MainSceneManager : MySceneManager
 
     private void HandleSpacePress()
     {
-        resumeBotton.SetActive(true);
-        quitBotton.SetActive(true);
+        if (!gamePaused)
+        {
+            resumeBotton.SetActive(true);
+            quitBotton.SetActive(true);
+            gamePaused = true;
+        }
     }
 
     private void EndGame()
     {
         gameOverMessage.SetActive(true);
-        StartCoroutine(HandleGameOverSequence(5f));
+        StartCoroutine(HandleGameOverSequence(3f));
     }
 
     public IEnumerator HandleGameOverSequence(float seconds2Sleep)
@@ -59,6 +64,7 @@ internal class MainSceneManager : MySceneManager
     {
         resumeBotton.SetActive(false);
         quitBotton.SetActive(false);
+        gamePaused = false;
         resumeGame.Invoke();
     }
 

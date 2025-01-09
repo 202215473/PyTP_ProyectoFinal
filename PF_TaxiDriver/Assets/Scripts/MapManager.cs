@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class MapManager : Singleton<MapManager>
 {
-    //[SerializeField]
-    private InputHandler inputHandler;
     [SerializeField] private MainSceneManager mainSceneManager;
     [SerializeField] private ClientSpawner clientSpawner;
     public GameObject worldLimits;
@@ -16,9 +14,11 @@ public class MapManager : Singleton<MapManager>
     public GameObject playersLocationOnMap;
     public ImageSpawner pinkImageSpawner;
     public ImageSpawner yellowImageSpawner;
+    private InputHandler inputHandler;
 
     private List<Client> clients = new List<Client>();
     private Dictionary<Client, List<GameObject>> clientMapDictionary;
+    private bool gamePaused = false;
 
     private void Awake()
     {
@@ -102,15 +102,19 @@ public class MapManager : Singleton<MapManager>
 
     private void HandleSpacePress()
     {
-        cityMap.SetActive(false);
-        playersLocationOnMap.SetActive(false);
-        foreach (KeyValuePair<Client, List<GameObject>> entry in clientMapDictionary)
-        {
-            Client client = entry.Key;
-            List<GameObject> clientImages = entry.Value;
+        if (!gamePaused)
+        { 
+            cityMap.SetActive(false);
+            playersLocationOnMap.SetActive(false);
+            foreach (KeyValuePair<Client, List<GameObject>> entry in clientMapDictionary)
+            {
+                Client client = entry.Key;
+                List<GameObject> clientImages = entry.Value;
 
-            clientImages[0].SetActive(false);
-            clientImages[1].SetActive(false);
+                clientImages[0].SetActive(false);
+                clientImages[1].SetActive(false);
+            }
+            gamePaused = true;
         }
     }
 
@@ -132,6 +136,7 @@ public class MapManager : Singleton<MapManager>
                 clientImages[0].SetActive(true);
             }
         }
+        gamePaused = false;
     }
 
     private void AddNewClient(Client newClient)

@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    //[SerializeField]
-    private InputHandler inputHandler;
     [SerializeField] private MainSceneManager mainSceneManager;
-    public ClientSpawner clientSpawner;
-    public GameObject worldLimits;
-    public Taxi player;
+    [SerializeField] private ClientSpawner clientSpawner;
+    [SerializeField] private GameObject worldLimits;
+    [SerializeField] private GameObject player;
 
+    private InputHandler inputHandler;
     private bool gamePaused = false;
     private int numberClientsDroppedOff = 0;
+    private Vector3 playersPreviousVelocity = Vector3.zero;
     int contador = 0;
 
     private void Awake()
@@ -52,13 +52,13 @@ public class GameManager : Singleton<GameManager>
         float zMin = edge2.position.z;
 
         float x = UnityEngine.Random.Range(xMin, xMax);
-        while (x < xMin || x > xMax)
+        while (x < xMin | x > xMax)
         {
             x = UnityEngine.Random.Range(xMin, xMax);
         }
         float y = -30.68f;
         float z = UnityEngine.Random.Range(zMin, zMax);
-        while (z < zMin || z > zMax)
+        while (z < zMin | z > zMax)
         {
             x = UnityEngine.Random.Range(xMin, xMax);
         }
@@ -70,25 +70,37 @@ public class GameManager : Singleton<GameManager>
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
-        player.droppedClientAtDestination += DeleteClient;
+        player.GetComponent<Taxi>().droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
     {
-        //inputHandler.userPressedSpace -= HandleSpacePress;
+        inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
-        // player.droppedClientAtDestination -= DeleteClient;
+        player.GetComponent<Taxi>().droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
     {
-        // TODO: parar el juego
-        gamePaused = true;
+        if (!gamePaused)
+        {
+            Rigidbody taxiRB = player.GetComponent<Rigidbody>();
+            this.playersPreviousVelocity = taxiRB.velocity;
+            taxiRB.velocity = Vector3.zero;
+
+            Taxi taxi = player.GetComponent<Taxi>();
+            taxi.SetIsBlocked(true);
+            gamePaused = true;
+        }
     }
 
     private void ResumeGame()
     {
-        // TODO: permitir al juego continuar
+        Rigidbody taxiRB = player.GetComponent<Rigidbody>();
+        taxiRB.velocity = this.playersPreviousVelocity;
+
+        Taxi taxi = player.GetComponent<Taxi>();
+        taxi.SetIsBlocked(false);
         gamePaused = false;
     }
 
