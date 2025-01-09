@@ -6,7 +6,7 @@ using System;
 
 public class StateManager : MonoBehaviour
 {
-    public event Action resumeGame;  // Esto es del MainSceneManager, habrá que modificarlo
+    public event Action NewCollision;  // Esto es del MainSceneManager, habrá que modificarlo
 
     private Taxi player;
     private Fence fence;
@@ -28,9 +28,17 @@ public class StateManager : MonoBehaviour
     {
         Debug.Log("Collided with: " + collision.gameObject.name);
 
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Fence"))
         {
-            Debug.Log("Player hit an obstacle");
+            Debug.Log("Player hit a fence");
+        }
+        else if (collision.gameObject.CompareTag("Debuf"))
+        {
+            Debug.Log("Player hit a debuf");
+        }
+        else if (collision.gameObject.CompareTag("Radar"))
+        {
+            Debug.Log("Player hit a radar");
         }
     }
 }

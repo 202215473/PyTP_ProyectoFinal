@@ -8,6 +8,8 @@ public class Taxi: CarController
 {
     private Rigidbody taxiRB;
 
+    //public StateManager stateManager;
+
     public int lifeValue;
     public bool isCarryingClient;
     public event Action<Client> droppedClientAtDestination; // ISA: TODO completar donde se lanza este evento
