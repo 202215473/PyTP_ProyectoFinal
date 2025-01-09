@@ -17,17 +17,16 @@ public class CarController : MonoBehaviour
     protected float moveInput;
     protected float turnInput;
 
-    private bool isReversing = false;
     protected void CheckSpeed(float moveInput)
     {
-        if (moveInput > 0 && !this.isReversing)
+        if (moveInput > 0)
         { Accelerate(moveInput); }
         else if (moveInput < 0)
         {
-            if (this.carSpeed > 0 && !this.isReversing)
-            { Brake(moveInput); }
-            else
+            if (this.carSpeed < 0.1f)
             { Reverse(moveInput); }
+            else
+            { Brake(moveInput); }
         }
         else
         { Decelerate(); }
@@ -50,8 +49,7 @@ public class CarController : MonoBehaviour
         this.colliders.wheelRL.brakeTorque = 0f;
 
         this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
-        this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;
-        this.isReversing = false;
+        this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;;
     }
     private void Reverse(float moveInput)
     {
@@ -60,20 +58,18 @@ public class CarController : MonoBehaviour
 
         this.colliders.wheelRR.motorTorque = this.reverseAcceleration * moveInput;
         this.colliders.wheelRL.motorTorque = this.reverseAcceleration * moveInput;
-        this.isReversing = true;
+        Debug.Log("Moving in reverse");
     }
     private void Decelerate()
     {
-        float resistance = this.acceleration * 0.2f;
+        float resistance = this.acceleration * 0.3f;
         this.colliders.wheelRR.brakeTorque = resistance;
         this.colliders.wheelRL.brakeTorque = resistance;
-        this.isReversing = false;
     }
     private void Brake(float moveInput)
     {
         this.colliders.wheelRR.brakeTorque = Mathf.Abs(this.brakeForce * moveInput);
         this.colliders.wheelRL.brakeTorque = Mathf.Abs(this.brakeForce * moveInput);
-        this.isReversing = false;
     }
     private void Turn(float turnInput)
     {

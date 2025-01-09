@@ -29,6 +29,7 @@ public class Taxi: CarController
         carSpeed = this.taxiRB.velocity.magnitude;
         moveInput = this.inputHandler.GetMoveInput();
         turnInput = this.inputHandler.GetTurnInput();
+        Debug.Log("MOVE INPUT = " + moveInput);
         this.CheckSpeed(moveInput);
         this.CheckDirection(turnInput);  // To see if we are turning right or left
         this.UpdateMovement();

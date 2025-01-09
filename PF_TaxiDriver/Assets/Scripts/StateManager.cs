@@ -31,14 +31,24 @@ public class StateManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Fence"))
         {
             Debug.Log("Player hit a fence");
+            NewCollision?.Invoke(); 
+            //HandleFenceCollision();
         }
-        else if (collision.gameObject.CompareTag("Debuf"))
+    }
+
+    void OnTriggerEnter(Collider collision)
+    {
+        Debug.Log("Triggered with: " + collision.gameObject.name);
+
+        if (collision.CompareTag("Debuf"))
         {
             Debug.Log("Player hit a debuf");
+            //HandleDebufTrigger();
         }
-        else if (collision.gameObject.CompareTag("Radar"))
+        else if (other.CompareTag("Radar"))
         {
             Debug.Log("Player hit a radar");
+            //HandleRadarTrigger();
         }
     }
 }
