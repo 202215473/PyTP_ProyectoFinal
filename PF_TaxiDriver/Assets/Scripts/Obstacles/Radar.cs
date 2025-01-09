@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeedRadar : MonoBehaviour
+public class Radar : MonoBehaviour
 {
     private float speed;
     public float speedLimit = 100f;
