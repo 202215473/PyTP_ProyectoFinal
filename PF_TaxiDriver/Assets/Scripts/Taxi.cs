@@ -48,15 +48,22 @@ public class Taxi: CarController
         this.SetLifeValue(lastLifeValue);
         //this.SetSpeedValue(this.lastSpeedValue);
     }
+
     public int GetLifeValue()
     { return lifeValue; }
+
     public void SetLifeValue(int value)
     { this.lifeValue = value; }
+
     public float GetSpeedValue()
     { return this.carSpeed; }
 
     public void SetIsBlocked(bool isBlocked)
-    {
-        this.isBlocked = isBlocked;
-    }
+    { this.isBlocked = isBlocked; }
+
+    public bool GetIsCarryingClient()
+    { return isCarryingClient; }
+
+    public void SetIsCarryingClient(bool isCarryingClient)
+    { this.isCarryingClient = isCarryingClient; }
 }

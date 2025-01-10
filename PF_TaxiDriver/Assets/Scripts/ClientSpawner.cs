@@ -42,7 +42,7 @@ public class ClientSpawner : MonoBehaviour
 
     public void Spawn(Vector3 positionNewClient, Vector3 clientsDestination)
     {
-        int numberNewClient = UnityEngine.Random.Range(1, 8);
+        int numberNewClient = UnityEngine.Random.Range(1, 7);
         GameObject newClient2Spawn = prefabDictionary[numberNewClient];
 
         GameObject newClient = Instantiate(newClient2Spawn, Vector3.zero, Quaternion.identity);
@@ -62,6 +62,10 @@ public class ClientSpawner : MonoBehaviour
             Destroy(client.gameObject);
             clients.Remove(client);
         }
-        
+    }
+
+    public List<Client> GetClients()
+    {
+        return clients;
     }
 }

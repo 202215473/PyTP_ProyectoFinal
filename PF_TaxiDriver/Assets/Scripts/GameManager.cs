@@ -10,15 +10,20 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private GameObject worldLimits;
     [SerializeField] private GameObject player;
 
+    private Taxi taxi;
     private InputHandler inputHandler;
     private bool gamePaused = false;
     private int numberClientsDroppedOff = 0;
     private Vector3 playersPreviousVelocity = Vector3.zero;
+
+    public float minimumDistance = 10f;
+    public float minimumVelocity = 2f;
     int contador = 0;
 
     private void Awake()
     {
         inputHandler = player.GetComponent<InputHandler>();
+        taxi = player.GetComponent<Taxi>();
     }
 
     void Update()
@@ -34,6 +39,18 @@ public class GameManager : Singleton<GameManager>
                 clientSpawner.Spawn(positionNewClient, clientsDestination);
                 contador += 1;
                 // se cuenta como q el taxi ha recogido al cliente cuando esta a menos de una distancia de x
+            }
+            bool playerIsCarryingClient = taxi.GetIsCarryingClient();
+            if (!playerIsCarryingClient)
+            {
+                foreach (Client client in clientSpawner.GetClients())
+                {
+                    CheckIfClientPickedUp(client);
+                    if (!playerIsCarryingClient)
+                    {
+                        break;
+                    }
+                }
             }
         }
     }
@@ -52,13 +69,13 @@ public class GameManager : Singleton<GameManager>
         float zMin = edge2.position.z;
 
         float x = UnityEngine.Random.Range(xMin, xMax);
-        while (x < xMin | x > xMax)
+        while (x < xMin || x > xMax)
         {
             x = UnityEngine.Random.Range(xMin, xMax);
         }
         float y = -30.68f;
         float z = UnityEngine.Random.Range(zMin, zMax);
-        while (z < zMin | z > zMax)
+        while (z < zMin || z > zMax)
         {
             x = UnityEngine.Random.Range(xMin, xMax);
         }
@@ -70,14 +87,14 @@ public class GameManager : Singleton<GameManager>
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
-        player.GetComponent<Taxi>().droppedClientAtDestination += DeleteClient;
+        taxi.droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
     {
         inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
-        player.GetComponent<Taxi>().droppedClientAtDestination -= DeleteClient;
+        taxi.droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
@@ -88,7 +105,6 @@ public class GameManager : Singleton<GameManager>
             this.playersPreviousVelocity = taxiRB.velocity;
             taxiRB.velocity = Vector3.zero;
 
-            Taxi taxi = player.GetComponent<Taxi>();
             taxi.SetIsBlocked(true);
             gamePaused = true;
         }
@@ -99,7 +115,6 @@ public class GameManager : Singleton<GameManager>
         Rigidbody taxiRB = player.GetComponent<Rigidbody>();
         taxiRB.velocity = this.playersPreviousVelocity;
 
-        Taxi taxi = player.GetComponent<Taxi>();
         taxi.SetIsBlocked(false);
         gamePaused = false;
     }
@@ -108,5 +123,19 @@ public class GameManager : Singleton<GameManager>
     {
         numberClientsDroppedOff++;
         clientSpawner.DestroyClient(client);
+    }
+
+    private void CheckIfClientPickedUp(Client client)
+    {
+        Vector3 clientsPosition = client.gameObject.transform.position;
+        Vector3 playersPosition = player.gameObject.transform.position;
+        float taxisVelocity = Mathf.Abs(player.GetComponent<Rigidbody>().velocity.magnitude);
+
+        if (Vector3.Distance(clientsPosition, playersPosition) <= minimumDistance && taxisVelocity <= minimumVelocity)
+        {
+            taxi.SetIsCarryingClient(true);
+            client.SetIsPickedUp(true);
+            client.gameObject.SetActive(false);
+        }
     }
 }
