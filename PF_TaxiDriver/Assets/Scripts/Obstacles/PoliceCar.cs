@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PoliceCar : Obstacle
 {
-    public SpeedRadar speedRadar;    // Police cars usually have a speed radar
+    public Radar speedRadar;    // Police cars usually have a speed radar
     void Start()
     {
         this.canChaseTaxi = true;
