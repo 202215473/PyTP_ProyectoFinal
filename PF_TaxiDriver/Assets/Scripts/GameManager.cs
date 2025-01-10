@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -12,13 +13,24 @@ public class GameManager : Singleton<GameManager>
 
     private Taxi taxi;
     private InputHandler inputHandler;
-    private bool gamePaused = false;
-    private int numberClientsDroppedOff = 0;
+
+    public event Action<Client> droppedClientAtDestination;
     private Vector3 playersPreviousVelocity = Vector3.zero;
+    private Client currentClient;
+    private bool gamePaused = false;
+
+    private int numberClientsDroppedOff = 0;
+    private int perClientsDroppedOff = 4;
+    private float diagonalOfWorld;
+    private float expectedVelocity = 40f;
+    private float factor = 2.5f;
+    private double totalPauseTime = 0;
+    private double startTime;
+    private double pauseTime;
+    private double timeMargin;
 
     public float minimumDistance = 10f;
-    public float minimumVelocity = 2f;
-    int contador = 0;
+    public float minimumVelocity = 5f;
 
     private void Awake()
     {
@@ -26,19 +38,33 @@ public class GameManager : Singleton<GameManager>
         taxi = player.GetComponent<Taxi>();
     }
 
+    private void Start()
+    {
+        Transform edge1 = worldLimits.transform.GetChild(0);
+        Transform edge2 = worldLimits.transform.GetChild(1);
+        Transform edge3 = worldLimits.transform.GetChild(2);
+        Transform edge4 = worldLimits.transform.GetChild(3);
+
+        Vector3 upLeftCorner = new Vector3(edge1.position.x, 0, edge3.position.z);
+        Vector3 downRightCorner = new Vector3(edge4.position.x, 0, edge2.position.z);
+        diagonalOfWorld = Vector3.Distance(upLeftCorner, downRightCorner);
+
+        Vector3 positionNewClient = GenerateRandomPosition();
+        Vector3 clientsDestination = GenerateRandomPosition();
+        clientSpawner.Spawn(positionNewClient, clientsDestination);
+        startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
+
+        timeMargin = CalculateTimeMargin();
+    }
+
     void Update()
     {
         if (!gamePaused)
         {
-            // pensar cuando deben salir los clientes (en funcion al tiempo jugado o en funcion a los clientes recogidos?)
-            if (contador == 0) // condicion para nuevo cliente
+            double currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
+            if (currentTime - startTime - totalPauseTime >= timeMargin)
             {
-                Vector3 positionNewClient = GenerateRandomPosition();
-                Vector3 clientsDestination = GenerateRandomPosition();  // el destino se ve cuando el taxi a recogido al cliente
-
-                clientSpawner.Spawn(positionNewClient, clientsDestination);
-                contador += 1;
-                // se cuenta como q el taxi ha recogido al cliente cuando esta a menos de una distancia de x
+                GenerateNewClient();
             }
             bool playerIsCarryingClient = taxi.GetIsCarryingClient();
             if (!playerIsCarryingClient)
@@ -48,16 +74,21 @@ public class GameManager : Singleton<GameManager>
                     CheckIfClientPickedUp(client);
                     if (!playerIsCarryingClient)
                     {
+                        currentClient = client;
                         break;
                     }
                 }
+            }
+            else
+            {
+                CheckIfClientDroppedOff(currentClient);
             }
         }
     }
 
     public Vector3 GenerateRandomPosition()
     {
-        Transform edge1 = worldLimits.transform.GetChild(0).transform;
+        Transform edge1 = worldLimits.transform.GetChild(0);
         Transform edge2 = worldLimits.transform.GetChild(1);
         Transform edge3 = worldLimits.transform.GetChild(2);
         Transform edge4 = worldLimits.transform.GetChild(3);
@@ -77,7 +108,7 @@ public class GameManager : Singleton<GameManager>
         float z = UnityEngine.Random.Range(zMin, zMax);
         while (z < zMin || z > zMax)
         {
-            x = UnityEngine.Random.Range(xMin, xMax);
+            z = UnityEngine.Random.Range(zMin, zMax);
         }
         Vector3 randomPosition = new Vector3(x, y, x);
         return randomPosition;
@@ -87,20 +118,19 @@ public class GameManager : Singleton<GameManager>
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
-        taxi.droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
     {
         inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
-        taxi.droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
     {
         if (!gamePaused)
         {
+            pauseTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
             Rigidbody taxiRB = player.GetComponent<Rigidbody>();
             this.playersPreviousVelocity = taxiRB.velocity;
             taxiRB.velocity = Vector3.zero;
@@ -116,6 +146,9 @@ public class GameManager : Singleton<GameManager>
         taxiRB.velocity = this.playersPreviousVelocity;
 
         taxi.SetIsBlocked(false);
+
+        double resumeTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
+        totalPauseTime += resumeTime - pauseTime;
         gamePaused = false;
     }
 
@@ -137,5 +170,43 @@ public class GameManager : Singleton<GameManager>
             client.SetIsPickedUp(true);
             client.gameObject.SetActive(false);
         }
+    }
+
+    private void CheckIfClientDroppedOff(Client client)
+    {
+        Vector3 destination = client.GetDestination();
+        Vector3 playersPosition = player.gameObject.transform.position;
+        float taxisVelocity = Mathf.Abs(player.GetComponent<Rigidbody>().velocity.magnitude);
+
+        if (Vector3.Distance(destination, playersPosition) <= minimumDistance && taxisVelocity <= minimumVelocity)
+        {
+            taxi.SetIsCarryingClient(false);
+            droppedClientAtDestination.Invoke(client);
+            DeleteClient(client);
+            timeMargin = CalculateTimeMargin();
+        }
+    }
+
+    public void GenerateNewClient()
+    {
+        Vector3 positionNewClient = GenerateRandomPosition();
+        Vector3 clientsDestination = GenerateRandomPosition();
+
+        clientSpawner.Spawn(positionNewClient, clientsDestination);
+        startTime = DateTimeOffset.Now.ToUnixTimeMilliseconds() / 1000.0;
+        totalPauseTime = 0;
+    }
+
+    public double CalculateTimeMargin()
+    {
+        if (numberClientsDroppedOff % perClientsDroppedOff == 0 && numberClientsDroppedOff <= 5 * perClientsDroppedOff)
+        {
+            expectedVelocity += 5;
+        }
+        else if (numberClientsDroppedOff % perClientsDroppedOff == 0 && numberClientsDroppedOff <= 8 * perClientsDroppedOff)
+        {
+            factor -= 0.05f;
+        }
+        return (diagonalOfWorld * factor) / expectedVelocity ;
     }
 }

@@ -12,7 +12,6 @@ public class Taxi: CarController
     //public StateManager stateManager;
 
     public int lifeValue;
-    public event Action<Client> droppedClientAtDestination; // ISA: TODO completar donde se lanza este evento
     private bool isCarryingClient;
     private bool isBlocked = false;
 

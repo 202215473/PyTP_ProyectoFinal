@@ -18,7 +18,7 @@ public class ClientSpawner : MonoBehaviour
 
     public event Action<Client> newClientSpawned;
 
-    void Start()
+    void Awake()
     {
         prefabDictionary = new Dictionary<int, GameObject>()
         {
@@ -30,14 +30,6 @@ public class ClientSpawner : MonoBehaviour
             {6, elderPrefab},
             {7, boyPrefab}
         };
-
-        foreach (var prefab in prefabDictionary)
-        {
-            if (prefab.Value == null)
-            {
-                Debug.LogError($"Prefab con clave {prefab.Key} no está asignado en el inspector.");
-            }
-        }
     }
 
     public void Spawn(Vector3 positionNewClient, Vector3 clientsDestination)

@@ -12,9 +12,12 @@ internal class MainSceneManager : MySceneManager
 {
     [SerializeField] private InputHandler inputHandler;
     [SerializeField] private LifeManager lifeManager;
+    [SerializeField] private ClientSpawner clientSpawner;
     [SerializeField] private GameObject resumeBotton;
     [SerializeField] private GameObject quitBotton;
     [SerializeField] private GameObject gameOverMessage;
+    [SerializeField] private GameObject newClientMessage;
+
     public event Action resumeGame;
     private bool gamePaused = false;
 
@@ -23,18 +26,21 @@ internal class MainSceneManager : MySceneManager
         resumeBotton.SetActive(false);
         quitBotton.SetActive(false);
         gameOverMessage.SetActive(false);
+        newClientMessage.SetActive(false);
     }
 
     private void OnEnable()
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         lifeManager.gameOver += EndGame;
+        clientSpawner.newClientSpawned += ShowNewClientMessage;
     }
 
     private void OnDisable()
     {
         inputHandler.userPressedSpace -= HandleSpacePress;
         lifeManager.gameOver -= EndGame;
+        clientSpawner.newClientSpawned -= ShowNewClientMessage;
     }
 
     private void HandleSpacePress()
@@ -73,5 +79,17 @@ internal class MainSceneManager : MySceneManager
         resumeBotton.SetActive(false);
         quitBotton.SetActive(false);
         EndGame();
+    }
+
+    private void ShowNewClientMessage(Client client)
+    {
+        newClientMessage.SetActive(true);
+        StartCoroutine(HandleNewClientMessage(3f));
+    }
+
+    public IEnumerator HandleNewClientMessage(float seconds2Sleep)
+    {
+        yield return new WaitForSeconds(seconds2Sleep);
+        newClientMessage.SetActive(false);
     }
 }

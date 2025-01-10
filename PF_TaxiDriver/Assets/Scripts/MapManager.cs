@@ -8,6 +8,7 @@ public class MapManager : Singleton<MapManager>
 {
     [SerializeField] private MainSceneManager mainSceneManager;
     [SerializeField] private ClientSpawner clientSpawner;
+    [SerializeField] private GameManager gameManager;
     public GameObject worldLimits;
     public Taxi player;
     public GameObject cityMap;
@@ -23,11 +24,11 @@ public class MapManager : Singleton<MapManager>
     private void Awake()
     {
         inputHandler = player.GetComponent<InputHandler>();
+        clientMapDictionary = new Dictionary<Client, List<GameObject>>();
     }
 
     void Start()
     {
-        clientMapDictionary = new Dictionary<Client, List<GameObject>>();
         cityMap.SetActive(true);
         playersLocationOnMap.SetActive(true);
         UpdatePlayersLocationOnMap();
@@ -89,7 +90,7 @@ public class MapManager : Singleton<MapManager>
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
         clientSpawner.newClientSpawned += AddNewClient;
-        player.droppedClientAtDestination += DeleteClient;
+        gameManager.droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
@@ -97,7 +98,7 @@ public class MapManager : Singleton<MapManager>
         inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
         clientSpawner.newClientSpawned -= AddNewClient;
-        player.droppedClientAtDestination -= DeleteClient;
+        gameManager.droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
