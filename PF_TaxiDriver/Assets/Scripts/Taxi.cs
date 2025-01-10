@@ -6,15 +6,14 @@ using UnityEngine;
 
 public class Taxi: CarController
 {
-    [SerializeField] private InputHandler inputHandler; 
+    public InputHandler inputHandler; 
     private Rigidbody taxiRB;
 
     //public StateManager stateManager;
 
     public int lifeValue;
-    public bool isCarryingClient;
-    public event Action<Client> droppedClientAtDestination; // ISA: TODO completar donde se lanza este evento
-
+    private bool isCarryingClient;
+    private bool isBlocked = false;
 
     // Start is called before the first frame update
     void Start()
@@ -26,13 +25,15 @@ public class Taxi: CarController
     // Update is called once per frame
     void Update()
     {
-        carSpeed = this.taxiRB.velocity.magnitude;
-        moveInput = this.inputHandler.GetMoveInput();
-        turnInput = this.inputHandler.GetTurnInput();
-        Debug.Log("MOVE INPUT = " + moveInput);
-        this.CheckSpeed(moveInput);
-        this.CheckDirection(turnInput);  // To see if we are turning right or left
-        this.UpdateMovement();
+        if (!isBlocked)
+        {
+            carSpeed = this.taxiRB.velocity.magnitude;
+            moveInput = this.inputHandler.GetMoveInput();
+            turnInput = this.inputHandler.GetTurnInput();
+            this.CheckSpeed(moveInput);
+            this.CheckDirection(turnInput);  // To see if we are turning right or left
+            this.UpdateMovement();
+        }
     }
     public void CrashWithObstacle(Obstacle obstacle)
     {
@@ -46,10 +47,22 @@ public class Taxi: CarController
         this.SetLifeValue(lastLifeValue);
         //this.SetSpeedValue(this.lastSpeedValue);
     }
+
     public int GetLifeValue()
     { return lifeValue; }
+
     public void SetLifeValue(int value)
     { this.lifeValue = value; }
+
     public float GetSpeedValue()
     { return this.carSpeed; }
+
+    public void SetIsBlocked(bool isBlocked)
+    { this.isBlocked = isBlocked; }
+
+    public bool GetIsCarryingClient()
+    { return isCarryingClient; }
+
+    public void SetIsCarryingClient(bool isCarryingClient)
+    { this.isCarryingClient = isCarryingClient; }
 }
