@@ -6,49 +6,42 @@ using System;
 
 public class StateManager : MonoBehaviour
 {
-    public event Action NewCollision;  // Esto es del MainSceneManager, habrá que modificarlo
+    public event Action<GameObject> CollisionWithObstacle = delegate { };
+    public event Action CollisionWithWorldLimits;
 
-    private Taxi player;
-    private Fence fence;
-    private SpeedRadar speedRadar;
-    private Debuf debuf;
-    
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided with: " + collision.gameObject.name);
-
-        if (collision.gameObject.CompareTag("Fence"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("Player hit a fence");
-            NewCollision?.Invoke(); 
-            //HandleFenceCollision();
+            CollisionWithObstacle.Invoke(collision.gameObject); 
         }
+        else if (collision.gameObject.CompareTag("EndMap"))
+        { CollisionWithWorldLimits.Invoke(); }
     }
 
     void OnTriggerEnter(Collider collision)
     {
-        Debug.Log("Triggered with: " + collision.gameObject.name);
-
-        if (collision.CompareTag("Debuf"))
-        {
-            Debug.Log("Player hit a debuf");
-            //HandleDebufTrigger();
+        
+        if (collision.gameObject.CompareTag("Radar"))
+        { 
+            float taxiSpeed = GetComponent<Rigidbody>().velocity.magnitude;
+            Radar radar = collision.gameObject.GetComponent<Radar>();
+            float speedLimit = radar.GetSpeedLimit();
+            if (taxiSpeed > speedLimit)
+            { CollisionWithObstacle.Invoke(collision.gameObject); }
         }
-        else if (other.CompareTag("Radar"))
-        {
-            Debug.Log("Player hit a radar");
-            //HandleRadarTrigger();
-        }
+        else if (collision.gameObject.CompareTag("Obstacle"))
+        { CollisionWithObstacle.Invoke(collision.gameObject); }
     }
 }

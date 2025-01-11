@@ -10,22 +10,26 @@ using UnityEngine.UI;
 
 public class MoneyManager : DataManager
 {
-    public float currentMoney = 0;
+    public float currentMoney = 0f;
+    public float expectedTip = 50f;
     public MoneyText moneyText;
-
+    [SerializeField] private StateManager stateManager;
+    
     public override void Start()
     {
         moneyText.SetMoney(currentMoney);
+        //stateManager = Instantiate(StateManager);    // INSTANCIAR STATE MANAGER
     }
 
     private void OnEnable()
     {
         // <objeto_al_q_me_subscribo>.<evento> += UpdateMoney;
+        stateManager.CollisionWithObstacle += HandleCollisionWithObstacle;
     }
-
     private void OnDisable()
     {
         // <objeto_al_q_me_subscribo>.<evento> -= UpdateMoney;
+        stateManager.CollisionWithObstacle -= HandleCollisionWithObstacle;
     }
 
     public void UpdateMoney(float money)
@@ -33,4 +37,14 @@ public class MoneyManager : DataManager
         currentMoney = money;
         moneyText.SetMoney(currentMoney);
     }
+    public void HandleCollisionWithObstacle(GameObject gameObject)
+    {
+        Obstacle obstacle = gameObject.GetComponent<Obstacle>();
+        if (obstacle != null)
+        {
+            float moneyToSubstract = obstacle.GetMoneyToSubstract();
+            expectedTip -= moneyToSubstract;
+        }
+    }
+
 }

@@ -6,11 +6,9 @@ public class Fence : Obstacle
 {
     void Start()
     {
-        this.canChaseTaxi = false;
         this.isSolidObject = true;
-        this.pointsToSubstract = -10;
-        //this.speedMultiplier = 0.8f;
-        this.duration = 1;
+        this.pointsToSubstract = -15;
+        this.moneyToSubstract = -4f;
     }
 
     // Update is called once per frame

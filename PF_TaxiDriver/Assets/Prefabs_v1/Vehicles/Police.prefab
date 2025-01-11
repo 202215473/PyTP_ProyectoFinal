@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 1348718573842630220}
   - component: {fileID: 3397231750239087119}
   - component: {fileID: 2474458940805093291}
+  - component: {fileID: 3297649844223730284}
   m_Layer: 0
   m_Name: Police
   m_TagString: Untagged
@@ -254,6 +255,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3297649844223730284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6452039197999972492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d5ffe5660b19684595240653a437b8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedRadar: {fileID: 0}
 --- !u!1 &6685709738900195085
 GameObject:
   m_ObjectHideFlags: 0
