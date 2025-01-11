@@ -10,15 +10,15 @@ using UnityEngine.UI;
 
 public class MoneyManager : DataManager
 {
-    public float currentMoney = 0;
+    public float currentMoney = 0f;
+    public float expectedTip = 50f;
     public MoneyText moneyText;
-
-    private StateManager stateManager;
-
+    [SerializeField] private StateManager stateManager;
+    
     public override void Start()
     {
         moneyText.SetMoney(currentMoney);
-        //stateManager = StateManager();    // INSTANCIAR STATE MANAGER
+        //stateManager = Instantiate(StateManager);    // INSTANCIAR STATE MANAGER
     }
 
     private void OnEnable()
@@ -37,13 +37,28 @@ public class MoneyManager : DataManager
         currentMoney = money;
         moneyText.SetMoney(currentMoney);
     }
-    public void HandleCollisionWithObstacle(GameObject @object)
+    public void HandleCollisionWithObstacle(GameObject gameObject)
     {
-        Obstacle obstacle = @object.GetComponent<Obstacle>();
+        //Debug.Log("We have lost money after crashing with " + gameObject.name);
+        //Obstacle obstacle = gameObject.GetComponent<Obstacle>();
+        //if (obstacle != null)
+        //{
+        //    float moneyToSubstract = obstacle.GetMoneyToSubstract();
+        //    expectedTip -= moneyToSubstract;
+        //}
+        Debug.Log("We have lost money after crashing with " + gameObject.name);
+        Obstacle obstacle = gameObject.GetComponent<Obstacle>();
         if (obstacle != null)
         {
+            Debug.Log("Obstacle detected: " + obstacle.name);
             float moneyToSubstract = obstacle.GetMoneyToSubstract();
-            UpdateMoney(currentMoney + moneyToSubstract);
+            expectedTip -= moneyToSubstract;
+            Debug.Log("Money deducted: " + moneyToSubstract);
+        }
+        else
+        {
+            Debug.LogError("The collided object does not have an Obstacle component.");
         }
     }
+
 }

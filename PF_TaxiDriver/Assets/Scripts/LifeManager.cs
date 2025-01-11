@@ -11,8 +11,7 @@ public class LifeManager : DataManager
     public int currentLife;
     public LifeBar lifeBar;
     public event Action gameOver;
-
-    private StateManager stateManager;
+    [SerializeField] private StateManager stateManager;
     // private ;  Clase a la que me tengo que suscribir
 
     public override void Start()
@@ -38,27 +37,31 @@ public class LifeManager : DataManager
 
     public void UpdateLife(int damage)
     {
-        if (damage >= currentLife)
+        if (damage <= currentLife)
         {
             currentLife -= damage;
             lifeBar.SetLife(currentLife);
         }
         else
         {
+            currentLife = 0;
+            lifeBar.SetLife(currentLife);
             gameOver.Invoke();
         }
     }
-    public void HandleCollisionWithObstacle(GameObject @object)
+    public void HandleCollisionWithObstacle(GameObject gameObject)
     {
-        Obstacle obstacle = @object.GetComponent<Obstacle>();
+        Debug.Log("We have lost life after crashing with " + gameObject.name);
+        Obstacle obstacle = gameObject.GetComponent<Obstacle>();
         if (obstacle != null)
         {
+            Debug.Log("Substracting points");
             int pointsToSubstract = obstacle.GetPointsToSubstract();
             UpdateLife(Mathf.Abs(pointsToSubstract));
         }
     }
     public void HandleCollisionWithWorldLimits() 
     {
-        UpdateLife(10);
+        UpdateLife(20);
     }
 }
