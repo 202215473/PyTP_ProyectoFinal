@@ -26,6 +26,7 @@ public class MoneyManager : DataManager
         expectedTip = initialTip;
         moneyText.SetMoney(currentMoney);
         taxi = player.GetComponent<Taxi>();
+
     }
 
     private void OnEnable()

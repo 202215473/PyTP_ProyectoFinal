@@ -19,5 +19,3 @@ public class Obstacle : MonoBehaviour
     { return pointsToSubstract; }
     public float GetMoneyToSubstract()
     { return moneyToSubstract; }
-
-}
