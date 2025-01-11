@@ -6,28 +6,29 @@ using UnityEngine;
 
 public class MapManager : Singleton<MapManager>
 {
-    //[SerializeField]
-    private InputHandler inputHandler;
     [SerializeField] private MainSceneManager mainSceneManager;
     [SerializeField] private ClientSpawner clientSpawner;
+    [SerializeField] private GameManager gameManager;
     public GameObject worldLimits;
     public Taxi player;
     public GameObject cityMap;
     public GameObject playersLocationOnMap;
     public ImageSpawner pinkImageSpawner;
     public ImageSpawner yellowImageSpawner;
+    private InputHandler inputHandler;
 
     private List<Client> clients = new List<Client>();
     private Dictionary<Client, List<GameObject>> clientMapDictionary;
+    private bool gamePaused = false;
 
     private void Awake()
     {
         inputHandler = player.GetComponent<InputHandler>();
+        clientMapDictionary = new Dictionary<Client, List<GameObject>>();
     }
 
     void Start()
     {
-        clientMapDictionary = new Dictionary<Client, List<GameObject>>();
         cityMap.SetActive(true);
         playersLocationOnMap.SetActive(true);
         UpdatePlayersLocationOnMap();
@@ -89,7 +90,7 @@ public class MapManager : Singleton<MapManager>
         inputHandler.userPressedSpace += HandleSpacePress;
         mainSceneManager.resumeGame += ResumeGame;
         clientSpawner.newClientSpawned += AddNewClient;
-        player.droppedClientAtDestination += DeleteClient;
+        gameManager.droppedClientAtDestination += DeleteClient;
     }
 
     private void OnDisable()
@@ -97,20 +98,24 @@ public class MapManager : Singleton<MapManager>
         inputHandler.userPressedSpace -= HandleSpacePress;
         mainSceneManager.resumeGame -= ResumeGame;
         clientSpawner.newClientSpawned -= AddNewClient;
-        player.droppedClientAtDestination -= DeleteClient;
+        gameManager.droppedClientAtDestination -= DeleteClient;
     }
 
     private void HandleSpacePress()
     {
-        cityMap.SetActive(false);
-        playersLocationOnMap.SetActive(false);
-        foreach (KeyValuePair<Client, List<GameObject>> entry in clientMapDictionary)
-        {
-            Client client = entry.Key;
-            List<GameObject> clientImages = entry.Value;
+        if (!gamePaused)
+        { 
+            cityMap.SetActive(false);
+            playersLocationOnMap.SetActive(false);
+            foreach (KeyValuePair<Client, List<GameObject>> entry in clientMapDictionary)
+            {
+                Client client = entry.Key;
+                List<GameObject> clientImages = entry.Value;
 
-            clientImages[0].SetActive(false);
-            clientImages[1].SetActive(false);
+                clientImages[0].SetActive(false);
+                clientImages[1].SetActive(false);
+            }
+            gamePaused = true;
         }
     }
 
@@ -132,6 +137,7 @@ public class MapManager : Singleton<MapManager>
                 clientImages[0].SetActive(true);
             }
         }
+        gamePaused = false;
     }
 
     private void AddNewClient(Client newClient)
