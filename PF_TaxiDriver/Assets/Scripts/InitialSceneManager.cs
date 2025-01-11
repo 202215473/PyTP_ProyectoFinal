@@ -8,8 +8,10 @@ using UnityEngine;
 
 public class InitialSceneManager : MySceneManager
 {
-    public void StartGame()
+    private static bool numPlayers1;
+    public void StartGame(bool playerVsAI)
     {
+        GameState.GetInstance().SetPlayerVsAI(playerVsAI);
         string newScene = "MainScene";
         ChangeScenes(newScene);
     }

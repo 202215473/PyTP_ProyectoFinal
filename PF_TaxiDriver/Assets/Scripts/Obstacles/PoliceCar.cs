@@ -10,8 +10,7 @@ public class PoliceCar : Obstacle
         this.canChaseTaxi = true;
         this.isSolidObject = true;
         this.pointsToSubstract = -30;
-        //this.speedMultiplier = 0.8f;
-        this.duration = 1;
+        this.moneyToSubstract = -5f;
     }
 
     // Update is called once per frame
