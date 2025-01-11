@@ -10,25 +10,40 @@ using UnityEngine.UI;
 
 public class MoneyManager : DataManager
 {
-    public float currentMoney = 0f;
-    public float expectedTip = 50f;
-    public MoneyText moneyText;
     [SerializeField] private StateManager stateManager;
-    
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private GameObject player;
+
+    private Taxi taxi;
+
+    private float currentMoney = 0f;
+    private float initialTip = 50f;
+    private float expectedTip;
+    public MoneyText moneyText;
+
     public override void Start()
     {
+        expectedTip = initialTip;
         moneyText.SetMoney(currentMoney);
+        taxi = player.GetComponent<Taxi>();
+
     }
 
     private void OnEnable()
     {
-        // <objeto_al_q_me_subscribo>.<evento> += UpdateMoney;
+        gameManager.droppedClientAtDestination += clientDropeedOff;
         stateManager.CollisionWithObstacle += HandleCollisionWithObstacle;
     }
     private void OnDisable()
     {
-        // <objeto_al_q_me_subscribo>.<evento> -= UpdateMoney;
+        gameManager.droppedClientAtDestination -= clientDropeedOff;
         stateManager.CollisionWithObstacle -= HandleCollisionWithObstacle;
+    }
+
+    public void clientDropeedOff(Client client)
+    {
+        UpdateMoney(expectedTip);
+        expectedTip = initialTip;
     }
 
     public void UpdateMoney(float money)
@@ -39,10 +54,10 @@ public class MoneyManager : DataManager
     public void HandleCollisionWithObstacle(GameObject gameObject)
     {
         Obstacle obstacle = gameObject.GetComponent<Obstacle>();
-        if (obstacle != null)
+        if (obstacle != null && taxi.GetIsCarryingClient())
         {
             float moneyToSubstract = obstacle.GetMoneyToSubstract();
-            expectedTip -= moneyToSubstract;
+            expectedTip += moneyToSubstract;
         }
     }
 
