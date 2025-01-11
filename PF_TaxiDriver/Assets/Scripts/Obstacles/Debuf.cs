@@ -7,11 +7,9 @@ public class Debuf : Obstacle
     // Start is called before the first frame update
     void Start()
     {
-        this.canChaseTaxi = false;
         this.isSolidObject = false;
-        this.pointsToSubstract = 0;
-        //this.speedMultiplier = 0.5f;
-        this.duration = 30;
+        this.pointsToSubstract = -6;
+        this.moneyToSubstract = 0f;
     }
 
     // Update is called once per frame
