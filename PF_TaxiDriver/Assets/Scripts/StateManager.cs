@@ -4,23 +4,14 @@ using UnityEngine;
 using System;
 
 
-public class StateManager : MonoBehaviour
+public class StateManager : Singleton<StateManager>
 {
     public event Action<GameObject> CollisionWithObstacle = delegate { };
     public event Action CollisionWithWorldLimits;
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("PoliceCar"))
         {
             CollisionWithObstacle.Invoke(collision.gameObject); 
         }
@@ -38,7 +29,7 @@ public class StateManager : MonoBehaviour
             if (taxiSpeed > speedLimit)
             { CollisionWithObstacle.Invoke(collision.gameObject); }
         }
-        else if (collision.gameObject.CompareTag("Obstacle"))
+        else if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("PoliceCar"))
         { CollisionWithObstacle.Invoke(collision.gameObject); }
     }
 }

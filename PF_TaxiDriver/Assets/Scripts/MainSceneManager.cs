@@ -17,6 +17,7 @@ internal class MainSceneManager : MySceneManager
     [SerializeField] private GameObject quitBotton;
     [SerializeField] private GameObject gameOverMessage;
     [SerializeField] private GameObject newClientMessage;
+    [SerializeField] private AIAgent aiAgent;
 
     public event Action resumeGame;
     private bool gamePaused = false;
@@ -33,6 +34,7 @@ internal class MainSceneManager : MySceneManager
     {
         inputHandler.userPressedSpace += HandleSpacePress;
         lifeManager.gameOver += EndGame;
+        aiAgent.gameOver += EndGame;
         clientSpawner.newClientSpawned += ShowNewClientMessage;
     }
 
@@ -40,6 +42,7 @@ internal class MainSceneManager : MySceneManager
     {
         inputHandler.userPressedSpace -= HandleSpacePress;
         lifeManager.gameOver -= EndGame;
+        aiAgent.gameOver -= EndGame;
         clientSpawner.newClientSpawned -= ShowNewClientMessage;
     }
 

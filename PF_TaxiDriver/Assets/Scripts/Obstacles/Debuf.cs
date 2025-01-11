@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Debuf : Obstacle
 {
-    // Start is called before the first frame update
     void Start()
     {
         this.isSolidObject = false;
@@ -12,7 +11,6 @@ public class Debuf : Obstacle
         this.moneyToSubstract = 0f;
     }
 
-    // Update is called once per frame
     void Update()
     {
         

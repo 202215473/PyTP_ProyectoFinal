@@ -17,7 +17,6 @@ public class GameManager : Singleton<GameManager>
     public event Action<Client> droppedClientAtDestination;
     private Vector3 playersPreviousVelocity = Vector3.zero;
     private Client currentClient;
-    private bool playerVsAI;
     private bool gamePaused = false;
 
     private int numberClientsDroppedOff = 0;
@@ -41,8 +40,6 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        playerVsAI = GameState.GetInstance().GetPlayerVsAI();
-
         Transform edge1 = worldLimits.transform.GetChild(0);
         Transform edge2 = worldLimits.transform.GetChild(1);
         Transform edge3 = worldLimits.transform.GetChild(2);

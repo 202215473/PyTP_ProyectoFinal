@@ -16,13 +16,13 @@ public class CarController : MonoBehaviour
     protected float moveInput;
     protected float turnInput;
 
-    private float thresshold = 0.5f;
+    private float threshold = 0.5f;
 
     protected void CheckSpeed(float moveInput, float movingDirection)
     {
-        if ((movingDirection < thresshold && moveInput < 0) || (movingDirection > -thresshold && moveInput > 0))
+        if ((movingDirection < threshold && moveInput < 0) || (movingDirection > -threshold && moveInput > 0))
         { Accelerate(moveInput); }
-        else if ((movingDirection > -thresshold && moveInput < 0) || (movingDirection < +thresshold && moveInput > 0))
+        else if ((movingDirection > -threshold && moveInput < 0) || (movingDirection < +threshold && moveInput > 0))
         { Brake(moveInput); }
         else
         { Decelerate(); }
@@ -46,19 +46,10 @@ public class CarController : MonoBehaviour
             this.colliders.wheelRR.brakeTorque = 0f;
             this.colliders.wheelRL.brakeTorque = 0f;
         }
-        //moveInput = Mathf.Clamp(moveInput, -1f, 1f);
         this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
         this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;;
     }
-    //private void Reverse(float moveInput)
-    //{
-    //    this.colliders.wheelRR.brakeTorque = 0f;
-    //    this.colliders.wheelRL.brakeTorque = 0f;
-    //    this.colliders.wheelRR.motorTorque = this.acceleration * moveInput * 1.2f;
-    //    Debug.Log($"Motor Torque: {this.colliders.wheelRR.motorTorque}, Input: {moveInput}");
-    //    this.colliders.wheelRL.motorTorque = this.acceleration * moveInput * 1.2f;
-    //    Debug.Log($"Motor Torque: {this.colliders.wheelRL.motorTorque}, Input: {moveInput}");
-    //}
+
     private void Decelerate()
     {
         float resistance = this.acceleration * 0.5f;
