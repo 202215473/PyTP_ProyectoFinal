@@ -48,7 +48,7 @@ public class MoneyManager : DataManager
 
     public void UpdateMoney(float money)
     {
-        currentMoney = money;
+        currentMoney += money;
         moneyText.SetMoney(currentMoney);
     }
     public void HandleCollisionWithObstacle(GameObject gameObject)

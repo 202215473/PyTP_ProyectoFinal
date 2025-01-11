@@ -8,6 +8,7 @@ TagManager:
   - Obstacle
   - EndMap
   - Radar
+  - PoliceCar
   layers:
   - Default
   - TransparentFX

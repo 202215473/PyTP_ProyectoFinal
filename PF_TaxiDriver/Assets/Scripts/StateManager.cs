@@ -4,25 +4,14 @@ using UnityEngine;
 using System;
 
 
-public class StateManager : MonoBehaviour
+public class StateManager : Singleton<StateManager>
 {
     public event Action<GameObject> CollisionWithObstacle = delegate { };
     public event Action CollisionWithWorldLimits;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("PoliceCar"))
         {
             CollisionWithObstacle.Invoke(collision.gameObject); 
         }
@@ -32,7 +21,6 @@ public class StateManager : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        
         if (collision.gameObject.CompareTag("Radar"))
         { 
             float taxiSpeed = GetComponent<Rigidbody>().velocity.magnitude;
@@ -41,7 +29,7 @@ public class StateManager : MonoBehaviour
             if (taxiSpeed > speedLimit)
             { CollisionWithObstacle.Invoke(collision.gameObject); }
         }
-        else if (collision.gameObject.CompareTag("Obstacle"))
+        else if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("PoliceCar"))
         { CollisionWithObstacle.Invoke(collision.gameObject); }
     }
 }

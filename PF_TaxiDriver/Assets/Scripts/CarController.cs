@@ -16,13 +16,13 @@ public class CarController : MonoBehaviour
     protected float moveInput;
     protected float turnInput;
 
-    private float thresshold = 0.5f;
+    private float threshold = 0.5f;
 
     protected void CheckSpeed(float moveInput, float movingDirection)
     {
-        if ((movingDirection < thresshold && moveInput < 0) || (movingDirection > -thresshold && moveInput > 0))
+        if ((movingDirection < threshold && moveInput < 0) || (movingDirection > -threshold && moveInput > 0))
         { Accelerate(moveInput); }
-        else if ((movingDirection > -thresshold && moveInput < 0) || (movingDirection < +thresshold && moveInput > 0))
+        else if ((movingDirection > -threshold && moveInput < 0) || (movingDirection < +threshold && moveInput > 0))
         { Brake(moveInput); }
         else
         { Decelerate(); }
