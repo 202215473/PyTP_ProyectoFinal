@@ -39,25 +39,11 @@ public class MoneyManager : DataManager
     }
     public void HandleCollisionWithObstacle(GameObject gameObject)
     {
-        //Debug.Log("We have lost money after crashing with " + gameObject.name);
-        //Obstacle obstacle = gameObject.GetComponent<Obstacle>();
-        //if (obstacle != null)
-        //{
-        //    float moneyToSubstract = obstacle.GetMoneyToSubstract();
-        //    expectedTip -= moneyToSubstract;
-        //}
-        Debug.Log("We have lost money after crashing with " + gameObject.name);
         Obstacle obstacle = gameObject.GetComponent<Obstacle>();
         if (obstacle != null)
         {
-            Debug.Log("Obstacle detected: " + obstacle.name);
             float moneyToSubstract = obstacle.GetMoneyToSubstract();
             expectedTip -= moneyToSubstract;
-            Debug.Log("Money deducted: " + moneyToSubstract);
-        }
-        else
-        {
-            Debug.LogError("The collided object does not have an Obstacle component.");
         }
     }
 

@@ -8,7 +8,7 @@ public class StateManager : MonoBehaviour
 {
     public event Action<GameObject> CollisionWithObstacle = delegate { };
     public event Action CollisionWithWorldLimits;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,10 +22,8 @@ public class StateManager : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("We have collided with an obstacle"); 
             CollisionWithObstacle.Invoke(collision.gameObject); 
         }
         else if (collision.gameObject.CompareTag("EndMap"))
@@ -34,9 +32,16 @@ public class StateManager : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            Debug.Log("We have triggered an obstacle"); 
-            CollisionWithObstacle.Invoke(collision.gameObject); }
+        
+        if (collision.gameObject.CompareTag("Radar"))
+        { 
+            float taxiSpeed = GetComponent<Rigidbody>().velocity.magnitude;
+            Radar radar = collision.gameObject.GetComponent<Radar>();
+            float speedLimit = radar.GetSpeedLimit();
+            if (taxiSpeed > speedLimit)
+            { CollisionWithObstacle.Invoke(collision.gameObject); }
+        }
+        else if (collision.gameObject.CompareTag("Obstacle"))
+        { CollisionWithObstacle.Invoke(collision.gameObject); }
     }
 }

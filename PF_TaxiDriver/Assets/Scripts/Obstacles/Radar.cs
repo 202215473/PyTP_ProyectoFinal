@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class Radar : Obstacle
 {
-    private float speed;
-    public float speedLimit = 100f;
+    public float speedLimit = 15f;
 
     void Start()
     {
         this.isSolidObject = false;
         this.pointsToSubstract = -8;
-        this.moneyToSubstract = 0f;
+        this.moneyToSubstract = 5f;
     }
     private void Update()
     {
         
     }
+    public float GetSpeedLimit()
+    { return speedLimit; }
+
 }

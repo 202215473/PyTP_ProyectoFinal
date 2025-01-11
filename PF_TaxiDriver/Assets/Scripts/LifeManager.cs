@@ -51,11 +51,9 @@ public class LifeManager : DataManager
     }
     public void HandleCollisionWithObstacle(GameObject gameObject)
     {
-        Debug.Log("We have lost life after crashing with " + gameObject.name);
         Obstacle obstacle = gameObject.GetComponent<Obstacle>();
         if (obstacle != null)
         {
-            Debug.Log("Substracting points");
             int pointsToSubstract = obstacle.GetPointsToSubstract();
             UpdateLife(Mathf.Abs(pointsToSubstract));
         }
