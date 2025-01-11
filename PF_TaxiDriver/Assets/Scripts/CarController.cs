@@ -20,9 +20,9 @@ public class CarController : MonoBehaviour
 
     protected void CheckSpeed(float moveInput, float movingDirection)
     {
-        if ((movingDirection < -thresshold && moveInput < 0) || (movingDirection > thresshold && moveInput > 0))
+        if ((movingDirection < thresshold && moveInput < 0) || (movingDirection > -thresshold && moveInput > 0))
         { Accelerate(moveInput); }
-        else if ((movingDirection > thresshold && moveInput < 0) || (movingDirection < -thresshold && moveInput > 0))
+        else if ((movingDirection > -thresshold && moveInput < 0) || (movingDirection < +thresshold && moveInput > 0))
         { Brake(moveInput); }
         else
         { Decelerate(); }
@@ -46,7 +46,7 @@ public class CarController : MonoBehaviour
             this.colliders.wheelRR.brakeTorque = 0f;
             this.colliders.wheelRL.brakeTorque = 0f;
         }
-        moveInput = Mathf.Clamp(moveInput, -1f, 1f);
+        //moveInput = Mathf.Clamp(moveInput, -1f, 1f);
         this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
         this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;;
     }
@@ -61,7 +61,7 @@ public class CarController : MonoBehaviour
     //}
     private void Decelerate()
     {
-        float resistance = this.acceleration * 0.3f;
+        float resistance = this.acceleration * 0.5f;
         this.colliders.wheelRR.brakeTorque = resistance;
         this.colliders.wheelRL.brakeTorque = resistance;
     }

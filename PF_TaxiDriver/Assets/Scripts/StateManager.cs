@@ -6,29 +6,28 @@ using System;
 
 public class StateManager : MonoBehaviour
 {
-    public event Action<GameObject> CollisionWithObstacle;
+    public event Action<GameObject> CollisionWithObstacle = delegate { };
     public event Action CollisionWithWorldLimits;
-
-    //private Taxi player;
-    //private Fence fence;
-    //private Radar speedRadar;
-    //private Debuf debuf;
     
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
     void OnCollisionEnter(Collision collision)
     {
+        
         if (collision.gameObject.CompareTag("Obstacle"))
-        { CollisionWithObstacle.Invoke(collision.gameObject); }
+        {
+            Debug.Log("We have collided with an obstacle"); 
+            CollisionWithObstacle.Invoke(collision.gameObject); 
+        }
         else if (collision.gameObject.CompareTag("EndMap"))
         { CollisionWithWorldLimits.Invoke(); }
     }
@@ -36,6 +35,8 @@ public class StateManager : MonoBehaviour
     void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Obstacle"))
-        { CollisionWithObstacle.Invoke(collision.gameObject); }
+        {
+            Debug.Log("We have triggered an obstacle"); 
+            CollisionWithObstacle.Invoke(collision.gameObject); }
     }
 }

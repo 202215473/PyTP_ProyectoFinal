@@ -7,7 +7,7 @@ public class Fence : Obstacle
     void Start()
     {
         this.isSolidObject = true;
-        this.pointsToSubstract = -4;
+        this.pointsToSubstract = -15;
         this.moneyToSubstract = -4f;
     }
 

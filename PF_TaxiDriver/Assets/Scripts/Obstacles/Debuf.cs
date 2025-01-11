@@ -8,7 +8,7 @@ public class Debuf : Obstacle
     void Start()
     {
         this.isSolidObject = false;
-        this.pointsToSubstract = -2;
+        this.pointsToSubstract = -6;
         this.moneyToSubstract = 0f;
     }
 

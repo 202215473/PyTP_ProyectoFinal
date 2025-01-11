@@ -10,7 +10,7 @@ public class Radar : Obstacle
     void Start()
     {
         this.isSolidObject = false;
-        this.pointsToSubstract = -3;
+        this.pointsToSubstract = -8;
         this.moneyToSubstract = 0f;
     }
     private void Update()
