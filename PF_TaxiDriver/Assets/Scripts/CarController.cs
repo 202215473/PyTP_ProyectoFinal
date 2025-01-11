@@ -46,19 +46,10 @@ public class CarController : MonoBehaviour
             this.colliders.wheelRR.brakeTorque = 0f;
             this.colliders.wheelRL.brakeTorque = 0f;
         }
-        //moveInput = Mathf.Clamp(moveInput, -1f, 1f);
         this.colliders.wheelRR.motorTorque = this.acceleration * moveInput;
         this.colliders.wheelRL.motorTorque = this.acceleration * moveInput;;
     }
-    //private void Reverse(float moveInput)
-    //{
-    //    this.colliders.wheelRR.brakeTorque = 0f;
-    //    this.colliders.wheelRL.brakeTorque = 0f;
-    //    this.colliders.wheelRR.motorTorque = this.acceleration * moveInput * 1.2f;
-    //    Debug.Log($"Motor Torque: {this.colliders.wheelRR.motorTorque}, Input: {moveInput}");
-    //    this.colliders.wheelRL.motorTorque = this.acceleration * moveInput * 1.2f;
-    //    Debug.Log($"Motor Torque: {this.colliders.wheelRL.motorTorque}, Input: {moveInput}");
-    //}
+
     private void Decelerate()
     {
         float resistance = this.acceleration * 0.5f;

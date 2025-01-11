@@ -18,7 +18,6 @@ public class MoneyManager : DataManager
     public override void Start()
     {
         moneyText.SetMoney(currentMoney);
-        //stateManager = Instantiate(StateManager);    // INSTANCIAR STATE MANAGER
     }
 
     private void OnEnable()
