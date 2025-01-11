@@ -6,7 +6,6 @@ public class Fence : Obstacle
 {
     void Start()
     {
-        this.canChaseTaxi = false;
         this.isSolidObject = true;
         this.pointsToSubstract = -4;
         this.moneyToSubstract = -4f;

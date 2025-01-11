@@ -9,7 +9,6 @@ public class Radar : Obstacle
 
     void Start()
     {
-        this.canChaseTaxi = false;
         this.isSolidObject = false;
         this.pointsToSubstract = -3;
         this.moneyToSubstract = 0f;

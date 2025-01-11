@@ -8,21 +8,21 @@ public class CarController : MonoBehaviour
     public float turnAngle;
     public float acceleration;
     public float brakeForce;
+    public AnimationCurve curve;
+    public float carSpeed = 0f;
     public WheelColliders colliders;
     public WheelMeshes meshes;
-    public AnimationCurve curve;
 
-    protected float carSpeed = 0f;
     protected float moveInput;
     protected float turnInput;
 
-    protected void CheckSpeed(float moveInput)
+    private float thresshold = 0.5f;
+
+    protected void CheckSpeed(float moveInput, float movingDirection)
     {
-        if (moveInput > 0)
+        if ((movingDirection < -thresshold && moveInput < 0) || (movingDirection > thresshold && moveInput > 0))
         { Accelerate(moveInput); }
-        else if (this.carSpeed < 0.1f && moveInput < 0)
-        { Accelerate(moveInput); }
-        else if (this.carSpeed > 0.1f && moveInput < 0)
+        else if ((movingDirection > thresshold && moveInput < 0) || (movingDirection < -thresshold && moveInput > 0))
         { Brake(moveInput); }
         else
         { Decelerate(); }

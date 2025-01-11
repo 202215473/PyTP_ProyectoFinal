@@ -6,7 +6,6 @@ public class Obstacle : MonoBehaviour
 {
     private new BoxCollider collider;
 
-    protected bool canChaseTaxi;
     protected bool isSolidObject;
     protected int pointsToSubstract;
     protected float moneyToSubstract;
