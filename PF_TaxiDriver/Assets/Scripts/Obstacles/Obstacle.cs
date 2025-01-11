@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
     protected bool isSolidObject;
     protected int pointsToSubstract;
     protected float moneyToSubstract;
-    
+
     //public Obstacle()
     //{ }
     void Start()

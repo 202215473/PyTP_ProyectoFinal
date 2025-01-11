@@ -9,13 +9,11 @@ public class StateManager : MonoBehaviour
     public event Action<GameObject> CollisionWithObstacle = delegate { };
     public event Action CollisionWithWorldLimits;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -32,7 +30,6 @@ public class StateManager : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        
         if (collision.gameObject.CompareTag("Radar"))
         { 
             float taxiSpeed = GetComponent<Rigidbody>().velocity.magnitude;
